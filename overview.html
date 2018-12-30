@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Squirrel - Linked Data Crawler</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/shop-item.css" rel="stylesheet" />
+
+
+  </head>
+
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">Squirrel - Linked Data Crawler</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+			<!-- 
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+			-->
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-lg-3">
+
+  
+ <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" > 
+			
+          <div class="list-group">
+            <a href="index.html" class="list-group-item">Introduction</a>
+			<a href="#" class="list-group-item active" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a> 
+				<div class="collapse in show" id="collapseDocumentation" style="background:white;">
+					
+					  <ul>
+						  <li><a href="#" class="">Java Docs</a></li>
+						  <li><a href="#" class="">Overview</a></li>
+						  <li><a href="#" class="">Components</a></li>
+					 </ul>
+					
+				</div>
+			  
+            <a href="download.html" class="list-group-item">Downloads & Usage</a>
+            <a href="#" class="list-group-item">Release Notes</a>
+          </div>
+						<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="img/dummy-preview-image.png" class="my-4" ></a>
+
+
+        </div>
+        <!-- /.col-lg-3 -->
+
+        <div class="col-lg-9">
+
+
+          <div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              <h5>Overview</h5>
+            </div>
+            <div class="card-body">
+				<div class="container">
+					<div class="row">
+       					 <div class="col-md-12">
+							<p>Crawling data across the web deals with large datasets, requiring a good data organization, in order to classify and to index those datasets, to make then more useful.
+								 Representing differents datasets in a unique format, makes it easier to introduce common methodologies or algorithms to extract insights or predictions from different types of complex data.
+								 The state of the art to handle this complexity of data is its representation or modelling in the form of Linked RDF Data.
+							 </p>
+							 
+							 <p>RDF, as its name states, is a framework to describe resources used in the web. It is a standard developed by the World Wide Web Consortium (W3C) intended to describe metadata – data of data.
+								 This description allows for computers to understand the information contained in your human-readable document, and the fact that it is standardized provides a set of rules for collaborative
+								 systems to understand each other’s data. The way you describe data when using RDF is through simple statements that have a subject, a predicate, and an object.
+							 </p>
+							
+							 <p>SQUIRREL is crawling engine that provides tools to crawl linked data, in different serialization types.	
+							 </p>
+							 
+							 <p>SQUIRREL have an extensible API that allows users to create theirs own rules for extraction, analyzation of data and storage.	
+							 </p>
+							 
+						</div>
+					</div>
+				  </div>
+				<hr>
+            </div>
+          </div>
+			  
+			  
+		 <div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              <h5>Squirrel Core Architecture</h5>
+            </div>
+            <div class="card-body">
+				<div class="container">
+					<div class="row">
+       					 <div class="col-md-12">
+							 <img style='float:right' src="img/squirrel-arch.jpg" /> 
+							 <p>Squirrel Core is divided in two main components: <b>frontier</b> and <b>worker</b>. The execution of Squirrel requires one frontier running, while the user can set how many workers the system supports.
+							 </p>
+							 <p>The frontier is initialized by a list of input seeds. It will add all the identified URI's to a queue and to a filter. Once the frontier receives a call from a worker, will give all the URI's in the queue to the worker.
+							 </p>
+							 <p>The worker will only be initialized if there is a frontier available to connect to. Initially, it will request new URI's to crawl to the frontier. Then, it will fetched data available from the URI. After fetching, it will
+								 analyze the fetched file to extract triples from it and thus, store data in a sink. To read more about <b>fetcher</b>, <b>analyzer</b> and <b>sink</b>, read the <a href="#">components</a> section. In the end,
+								 all the URI's found by the analyzer will be serialized and sent to the frontier. The frontier receives these new URI's, checks if they are present in the filter and add to the queue only the ones that not.
+							 </p>
+							 <p>
+								 The frontier also register the IP number of the URI and assigns that IP to the first worker that requests it. By doing that, a worker will be responsible for crawling URI's from the same IP number.
+							 </p>
+							 <p>
+								For details about frontier and worker initialization, please visit the <a href="#">downloads & usage</a> section.
+							 </p>
+							 
+							 
+						</div>
+					</div>
+				  </div>
+				<hr>
+            </div>
+          </div>	  
+          <!-- /.card -->
+
+        </div>
+        <!-- /.col-lg-9 -->
+
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/particles.js"></script>
+   <script>
+    particlesJS.load('particles-js', 'assets/particles.json', function () {
+      console.log('callback - particles.js config loaded');
+    });
+  </script>
+
+  </body>
+
+</html>

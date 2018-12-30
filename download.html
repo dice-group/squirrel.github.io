@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>Squirrel - Linked Data Crawler</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/shop-item.css" rel="stylesheet" />
+	  
+	  <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+
+
+  </head>
+
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="index.html">Squirrel - Linked Data Crawler</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+			<!-- 
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+			-->
+        </div>
+      </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-lg-3">
+
+  
+ <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" > 
+			
+          <div class="list-group">
+            <a href="index.html" class="list-group-item">Introduction</a>
+			<a href="#" class="list-group-item" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a> 
+				<div class="collapse" id="collapseDocumentation" style="background:white;">
+					
+					  <ul>
+						  <li><a href="#" class="">Java Docs</a></li>
+						  <li><a href="overview.html" class="">Overview</a></li>
+						  <li><a href="#" class="">Worker Components</a></li>
+					 </ul>
+					
+				</div>
+			  
+            <a href="#" class="list-group-item active">Downloads & Usage</a>
+            <a href="#" class="list-group-item">Release Notes</a>
+          </div>
+			<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="img/dummy-preview-image.png" class="my-4" ></a>
+        </div>
+        <!-- /.col-lg-3 -->
+
+        <div class="col-lg-9">
+
+
+          <div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              <h5>Getting Started With Squirrel</h5>
+            </div>
+            <div class="card-body">
+				<div class="container">
+					<div class="row">
+       					 <div class="col-md-12">
+							<p>In order to set up Squirrel, please download the last version from the Git Hub Project Page:</p>
+							 
+								<p><a href="https://github.com/dice-group/Squirrel/releases">https://github.com/dice-group/Squirrel/releases </a></p>
+							 
+							 <p>After downloading it, decompress it on a folder of your choice. Squirrel uses <b>Docker</b> as the container, so you will need to install Docker in your OS if you have not. 
+								 You can check Docker CE installation instruction <a href="https://docs.docker.com/install/" >here</a>. Make sure that you have <b>Docker-Compose</b> installed as well. Check 
+								 <a href="https://docs.docker.com/compose/install/">here</a>
+							 for instructions.</p>
+							 
+							 <p>After the installation of the Docker Engine and Docker-Compose, go to the extracted folder and run:</p>
+
+							 <div class="well" style="background: #f2f2f2"><code class="bash">	mvn clean install -U -DskipTests -Dmaven.javadoc.skip=true</code></div>
+							 
+							 <p>This will build the binaries. Now we create the Docker images for the frontier and the Worker with:</p>
+							 <div class="well" style="background: #f2f2f2"><code class="bash"> docker build -f Dockerfile.frontier -t squirrel.frontier .</code>
+							 </div>
+							 
+							 <div class="well" style="background: #f2f2f2"><code class="bash">	docker build -f Dockerfile.worker -t squirrel.worker .</code></div>
+							 
+							 <p>Ok, we are almost there. Now you can insert some initial URIs in the file seeds/seeds.txt. After doing that, you can run with:</p>
+							<div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up</code></div>
+							<p>
+							 Wait some seconds for the initialization of MongoDB, RabbitMQ, Frontier and the Workers. By default, docker will use the docker-compose.yml file. We will cover in details all images described in this file in the next section.
+							If it is more convenient for you, you can start the images separatly, like:
+							 </p>
+							 <div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up -d mongodb rabbit</code></div>
+							<p>This will run these images in the background, since theirs outputs are very verbose. Next you can run the Frontier and worker in different terminals:
+							</p>
+							 <div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up frontier</code></div>
+
+							 <div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up worker1</code></div>
+								<p>This will allows you to run a new worker in a new terminal window, making it easily to follow the outputs.</p>
+
+
+							 
+						</div>
+					</div>
+				  </div>
+				<hr>
+            </div>
+          </div>
+			
+			
+			<div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              <h5>The Docker-Compose File</h5>
+            </div>
+            <div class="card-body">
+				<div class="container">
+					<div class="row">
+       					 <div class="col-md-12">
+							 <p>The docker-compose file is where you can configure your images to run Squirrel.
+								 There, you can notice some environment variables for the Frontier and Workers. For the Frontier, most of then are self explanatory,
+								 like the MDB_HOST_NAME, MDB_PORT and HOBBIT_RABBIT_HOST, which points to the current MongoDB and RabbitMQ running instances.
+								The SEED_FILE variable points to the file containing the initial URI’s that will be crawled and it is obligatory. 
+								 The URI_WHITELIST_FILE however, should contain only domains that will be allowed to crawl. If a domain is not on the list,
+								 the URI will be ignored. This variable is not required or the file can be empty.</p>
+							 
+							  <p>
+								 From the worker side, you have the same variables pointing to MongoDB and RabbitMQ instances. Still, you have the CONTEXT_CONFIG_FILE variable,
+								 which points to the Spring Bean metadata (see section below). This variable is obligatory to the Worker initialize its components. OUTPUT_FOLDER and HTML_SCRAPER_YAML_PATH are specific 
+								 related to the <b>FileBasedSink</b> and <b>HtmlScraperAnalyzer</b> and you can read more about then in the <a href="">Worker Components</a> section.
+									You can copy and paste many worker images as you want, and customize then with different implementations.
+							 </p>
+							 
+						</div>
+					</div>
+				  </div>
+				<hr>
+            </div>
+          </div>
+			
+			<div class="card card-outline-secondary my-4">
+            <div class="card-header">
+              <h5>Working with Different Implementations</h5>
+            </div>
+            <div class="card-body">
+				<div class="container">
+					<div class="row">
+       					 <div class="col-md-12">
+							 
+							 <p>Squirrel uses <a href="http://spring.io/projects/spring-framework">Spring</a> for dependency injection, which alows the user to control the implementations that will be used in run iime.
+								 Under spring-config/* you can fine some pre configured context files. There, you can configure which implementations you want to use for fetcher, analyzer and sink for the worker instance.
+								 To know more about the default implementations available and how to write your own, please visit the  <a href="">Worker Components</a> section. If you need reference about Spring metadata configuration,
+								 please check this <a href="https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html">link</a>.
+								 
+							 </p>
+							 
+							
+						</div>
+					</div>
+				  </div>
+				<hr>
+            </div>
+          </div>
+			  
+          <!-- /.card -->
+
+        </div>
+        <!-- /.col-lg-9 -->
+
+      </div>
+
+    </div>
+    <!-- /.container -->
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+      <div class="container">
+        <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+      </div>
+      <!-- /.container -->
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js"></script>
+   <script>
+    particlesJS.load('particles-js', 'assets/particles.json', function () {
+      console.log('callback - particles.js config loaded');
+    });
+  </script>
+
+  </body>
+
+</html>

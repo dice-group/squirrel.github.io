@@ -3,18 +3,18 @@
 
   <head>
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
 
     <title>Squirrel - Linked Data Crawler</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
 
     <!-- Custom styles for this template -->
-    <link href="css/shop-item.css" rel="stylesheet">
+    <link href="css/shop-item.css" rel="stylesheet" />
 
 
   </head>
@@ -30,6 +30,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
+			<!-- 
           <ul class="navbar-nav ml-auto">
             <li class="nav-item active">
               <a class="nav-link" href="#">Home
@@ -43,6 +44,7 @@
               <a class="nav-link" href="#">Contact</a>
             </li>
           </ul>
+			-->
         </div>
       </div>
     </nav>
@@ -55,13 +57,28 @@
         <div class="col-lg-3">
 
   
- <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" > 
+ 	<img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" > 
+			
           <div class="list-group">
-            <a href="#" class="list-group-item active">Introduction</a>
-            <a href="#" class="list-group-item">Components</a>
+            <a href="index.html" class="list-group-item">Introduction</a>
+			<a href="#" class="list-group-item" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a> 
+				<div class="collapse" id="collapseDocumentation" style="background:white;">
+					
+					  <ul>
+						  <li><a href="#" class="">Java Docs</a></li>
+						  <li><a href="overview.html" class="">Overview</a></li>
+						  <li><a href="#" class="">Worker Components</a></li>
+					 </ul>
+					
+				</div>
+			  
+            <a href="download.html" class="list-group-item">Downloads & Usage</a>
             <a href="#" class="list-group-item">Release Notes</a>
           </div>
+			<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="img/dummy-preview-image.png" class="my-4" ></a>
         </div>
+			
+		
         <!-- /.col-lg-3 -->
 
         <div class="col-lg-9">
@@ -71,9 +88,9 @@
 				<canvas class="particles-js-canvas-el" style="width: 100%; height: 100%;" width="1841" height="921"></canvas>
 			</div>
 			  
-			  <div style="position:relative;bottom:150px; left: 35%; widht:10%">
-				  <button type="button" class="btn btn-dark btn-lg" >Learn More</button>
-				  <button type="button" class="btn btn-dark btn-lg">Get Started </button>
+			  <div style="position:relative;bottom:150px; left: 30%; widht:10%">
+				  <a href="https://github.com/dice-group/Squirrel" target="_blank"><button type="button" class="btn btn-dark btn-lg" >Github Project Page</button></a>
+				  <a href="download.html"><button type="button" class="btn btn-dark btn-lg">Get Started </button></a>
 			  </div>
 <!--
             <img class="card-img-top img-fluid" src="http://placehold.it/900x400" alt="">
@@ -90,7 +107,17 @@
               <h5>How Squirrel Works ? </h5>
             </div>
             <div class="card-body">
-              <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Omnis et enim aperiam inventore, similique necessitatibus neque non! Doloribus, modi sapiente laboriosam aperiam fugiat laborum. Sequi mollitia, necessitatibus quae sint natus.</p>
+				<div class="container">
+					<div class="row">
+       					 <div class="col-md-12">
+							 <img style='float:right' src="img/squirrel-arch.jpg" /> 
+								<p>Squirrel uses data from any endpoint as input seeds. Once the URL is stored in the Queue, its data will be fetched, analyzed and found triples will be stored.</p>
+								<p>In Squirrel, the distributed architecture allows you to adjust the scalability to the needs. By using its extensive framework, it is possible to create custom components allowing to convert data not only to RDF serialization,
+								 but to any other that can describe a graph relationship.</p>
+							 	<p>To know more about Squirrel, please read the <a href="download.html">downloads and usage</a> and <a href="">documentation overview</a> sections.</p>						
+						</div>
+					</div>
+				  </div>
 				<hr>
             </div>
           </div>
