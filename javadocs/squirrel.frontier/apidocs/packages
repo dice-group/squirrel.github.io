@@ -1,0 +1,14 @@
+org.dice_research.squirrel.data.uri.filter
+org.dice_research.squirrel.data.uri.norm
+org.dice_research.squirrel.data.uri.info
+org.dice_research.squirrel.model
+org.dice_research.squirrel.queue
+org.dice_research.squirrel.log
+org.dice_research.squirrel.components
+org.dice_research.squirrel.graph
+org.dice_research.squirrel.graph.impl
+org.dice_research.squirrel.frontier.utils
+org.dice_research.squirrel.frontier.impl
+org.dice_research.squirrel.seed.generator
+org.dice_research.squirrel.seed.generator.impl
+org.dice_research.squirrel.configurator
