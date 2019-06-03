@@ -106,14 +106,14 @@ The Worker uses a generic bean to manage all the implementations used on Runtime
 
 
        <pre><code class="language-xml">
-	   
+
 	   &lt;bean id="fetcherBean"
 		class="org.dice_research.squirrel.fetcher.manage.SimpleOrderedFetcherManager"&gt;
 		&lt;constructor-arg&gt;
 			&lt;list&gt;
 				&lt;ref bean="httpFetcherBean" /&gt;
 				&lt;ref bean="ftpFetcherBean" /&gt;
-				&lt;ref bean="ckanFetcherBean" /&gt; 
+				&lt;ref bean="ckanFetcherBean" /&gt;
 				&lt;ref bean="sparqlDatasetFetcherBean" /&gt;
 				&lt;ref bean="sparqlFetcherBean" /&gt;
  		  	&lt;/list&gt;
@@ -121,7 +121,7 @@ The Worker uses a generic bean to manage all the implementations used on Runtime
 	&lt;/bean&gt;
 
       </code></pre>
-	  
+
 	  <p>Make sure that the bean referenced implements <b>org.dice_research.squirrel.fetcher.Fetcher</b>, otherwise an exception will be thrown and the bean will not be used.</p>
 
 <p>All the given fetchers fetches data on a file using RDF serialization, which combined with the RDFAnalyzer, will be good enough for most of the cases. The only exception is the CkanFetcher.</p>
@@ -132,12 +132,12 @@ They are the following:</p>
 <li><b>HttpFetcher</b>: fetches file using the http protocol, but accepting headers for rdf (application/rdf+xml).  Create the bean with:
 <pre><code class="language-xml">
 &lt;bean id="httpFetcherBean"
-		class="org.dice_research.squirrel.fetcher.http.HTTPFetcher" /&gt; 
+		class="org.dice_research.squirrel.fetcher.http.HTTPFetcher" /&gt;
 </code></pre></li><br>
-<li><b>FtpFetcher</b>: fetches file from FTP endpoints. Create the bean with: 
+<li><b>FtpFetcher</b>: fetches file from FTP endpoints. Create the bean with:
 <pre><code class="language-xml">
 &lt;bean id="ftpFetcherBean"
-		class="org.dice_research.squirrel.fetcher.ftp.FTPFetcher" /&gt; 
+		class="org.dice_research.squirrel.fetcher.ftp.FTPFetcher" /&gt;
 		</code></pre></li><br>
 
 <li><b>CkanFetcher</b>: fetches data from CKAN endpoints. The data will be fetched on a file as JSON. This fetcher requires the use of the analyzer org.dice_research.squirrel.analyzer.impl.ckan.CkanJsonAnalyzer, otherwise, the fetched data will not be analyzed and ignored.
@@ -154,9 +154,20 @@ Create the bean with:
 &lt;bean id="sparqlFetcherBean"
 		class="org.dice_research.squirrel.fetcher.sparql.SparqlBasedFetcher" /&gt;</code></pre></li><br>
 
-<li><b>SparqlDatasetFetcher</b>: Fetches data from a SPARQL endpoint that describes datasets according to the DCAT onthology (https://www.w3.org/TR/vocab-dcat/).</li>
+<li><b>SparqlDatasetFetcher</b>: Fetches data from a SPARQL endpoint that describes datasets according to the DCAT onthology (https://www.w3.org/TR/vocab-dcat/).
+  <pre><code class="language-xml">
+    &lt;bean id="sparqlDatasetFetcherBean"
+  		class="org.dice_research.squirrel.fetcher.sparql.SparqlDatasetFetcher"&gt;
+  		&lt;constructor-arg index="0" value="20"&gt;&lt;/constructor-arg&gt;
+  		&lt;constructor-arg index="1" value="0"&gt;&lt;/constructor-arg&gt;
+  		&lt;constructor-arg index="2" value="1000"&gt;&lt;/constructor-arg&gt;
+  	&lt;/bean&gt;</code></pre>
+
+    <p>The first argument is related to the interval (in ms) between the calls. Second and third arguments are related to the offset
+    indexes, start and end, respectively. </p>
+  </li>
 </ul>
-      
+
 
   						</div>
   					</div>
