@@ -72,8 +72,8 @@
   					  <ul>
   						  <li><a href="javadocs.html" class="">Java Docs</a></li>
   						  <li><a href="overview.html" class="">Overview</a></li>
-						  <li><a href="metadata.html" class="">Meta data</a></li>
-  						  <li><a href="#" class="">Worker Components</a></li>
+						  <li><a href="#" class="">Meta data </a></li>
+  						  <li><a href="worker_components.html" class="">Worker Components</a></li>
   					 </ul>
 
   				</div>
@@ -93,66 +93,79 @@
 
             <div class="card card-outline-secondary my-4">
               <div class="card-header">
-                <h5>Worker Components</h5>
+                <h5>Overview</h5>
               </div>
               <div class="card-body">
   				<div class="container">
   					<div class="row">
          					 <div class="col-md-12">
-                     <p>Squirrel uses <b>Spring</b> for dependency injection. The worker components uses the env variable <b>CONTEXT_CONFIG_FILE</b> to appoint the spring beans file.
-       In this file, you can define all the implementations that the Worker Component will use on Runtime.</p>
+                    <p>Squirrel collects metadata in the worker while crawling. There will be a meta data graph for every attempt a worker is doing to crawl a URI. 
+					 Even if a URI is crawled multiple times, the single crawling activities need to have different URIs. 
+					 Therefore, the worker will create a UUID-based URI for every crawleable URI. This URI will be used (with different suffixes) for:</p>
+						<ul>
+							<li>the activity resource in the meta data</li>
+							<li>the name of the graph (or file) containing the crawled data</li>
+							<li>the plan resource in the meta data comprising information about the single activities of the crawler</li>
+						</ul>
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+			
+			
+			<div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>Meta data model</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+                    <p>The meta data will be be available as RDF with the following structure: </p>
+					
+					<p><img src="img/meta-data.png" height="100%" width="100%" /></p>
+					
+					<p>Regarding prefixes, we assume that prov is the PROV-O ontology, sq stands for the Squirrel vocabulary while meta is the prefix of all generated instance URIs (e.g., the acitivity URI). We assume that the UUID used for our example is 123.</p>
+					 
+					 <pre><code class="language-xml">
+		@prefix rdfs:     &lt;http://www.w3.org/2000/01/rdf-schema#&gt; .
+		@prefix xsd:      &lt;http://www.w3.org/2001/XMLSchema#&gt; .
+		@prefix prov:     &lt;http://www.w3.org/ns/prov-o/&gt; .
+		@prefix sq:       &lt;http://www.w3id.org/squirrel/vocab#&gt; .
+		@prefix meta:     &lt;http://www.w3id.org/squirrel/metadata#&gt; .
 
-       <p>On the spring_config folder there is some examples of bean configurations for different combinations (storage on file system, sparql storage).
-        If you are not used with the Spring Framework, read the <a href = "https://docs.spring.io/spring/docs/5.2.0.M1/spring-framework-reference/overview.html#overview">
-        documentation</a> before. </p>
+		meta:123_activity a prov:Activity;
+		prov:qualifiedAssociation meta:123_workerAssociation;
+		prov:wasAssociatedWith meta:Worker_ID;
+		prov:startedAtTime "2018-05-01T00:00:00Z"^^xsd:dateTime;
+		prov:endedAtTime   "2018-05-01T01:11:00Z"^^xsd:dateTime;
+		sq:crawledUri &lt;http://example.org/myExample&gt;;
+		sq:numberOfTriples "99"^^xsd:long;
+		sq:hostedOn "8.8.8.8";
+		sq:status "successfull" .
 
-       <p>The workerComponentBean is defined as follows:</p>
+		meta:123_workerAssociation a prov:Association;
+					prov:agent   meta:Worker_ID;
+					prov:hadPlan meta:123_Plan .
 
+		meta:123_plan a prov:Plan;
+					rdfs:comment """org.dice_research.squirrel.fetcher.HTTPFetcher,
+					org.dice_research.squirrel.analyzer.impl.RDFAnalyzer,
+					...""" .
 
-       <pre><code class="language-xml">
-            &lt;bean id="workerBean"
-            		class="org.dice_research.squirrel.worker.impl.WorkerImpl"&gt;
-            		&lt;constructor-arg index="0" ref="workerComponent" /&gt;
-            		&lt;constructor-arg index="1" ref="fetcherBean" /&gt;
-            		&lt;constructor-arg index="2" ref="sinkBean" /&gt;
-            		&lt;constructor-arg index="3" ref="analyzerBean" /&gt;
-            		&lt;constructor-arg index="4" ref="robotsManagerBean" /&gt;
-            		&lt;constructor-arg index="5" ref="serializerBean" /&gt;
-            		&lt;constructor-arg index="6" ref="uriCollectorBean" /&gt;
-            		&lt;constructor-arg index="7" value="2000" /&gt;
-            		&lt;constructor-arg index="8"
-            			value="#{systemEnvironment['OUTPUT_FOLDER']}/log" /&gt;
-            		&lt;constructor-arg index="9" value="false" /&gt;
-            	&lt;/bean&gt;
-      </code></pre>
+		meta:123_resultgraph a prov:Entity;
+					prov:wasGeneratedBy meta:123_activity;
+					sq:containsDataOf &lt;http://example.org/myExample&gt; .
 
-       <p>Always use the class <b>org.dice_research.squirrel.worker.impl.WorkerImpl</b> for the implementation of the workerBean.  The worker implementation receives 9 arguments:</p>
-       <ul>
-
-       <li><b>workerComponent</b>: it is responsible for initializing the worker and managing the other components.
-          It is not possible to change this bean, because it is autowired. Always use the workerComponent reference.</li>
-
-       <li><b>fetcherBean</b>: The bean that will manage the fetchers used by the worker instance.</li>
-
-       <li><b>sinkBean</b>: The bean that will manage the sink.</li>
-
-       <li><b>analyzerBean</b>: The bean that will manage the analyzers used by the worker. You can define which analyzers the bean will use it.</li>
-
-       <li><b>robotsManagerBean</b>: this is the bean responsible for setting the rules for the robots exclusion standard. There is only one possible implementation for this bean.</li>
-
-       <li><b>uriCollectorBean</b>: the bean responsible for collecting the uri’s found by the analyzer and that will be sent to the frontier.</li>
-
-       <li><b>waitingTime</b>: Time (in ms) the worker waits when the given frontier couldn't provide any URIs before requesting new URIs again.</li>
-
-       <li><b>domainLogFile</b>: location where the log will be stored.</li>
-     </ul>
-
-       <p>For beans that has multiple implementations, you can find the reference bellow.</p>
-      <ul>
-         <li><a href="worker/fetchers.html">Fetchers</a></li>
-         <li>Analyzers,Serializers and Collectors</li>
-         <li>Sinks</li>
-     </ul>
+		meta:Worker_ID a  prov:Agent .
+							</code></pre>
+							
+							<p>meta:Worker_ID is a unique URI of a worker. http://example.org/myExample is the URI that has been crawled.</p>
+							<p>During the crawling process, every class that is handling the URI and influences the result or the data of the URI (Fetcher, Analyzers, Collector and Sink). This is independently done from the implementation of such components, being 
+							registred on their managers.</p>
+							
 
   						</div>
   					</div>
