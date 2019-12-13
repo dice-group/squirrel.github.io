@@ -1,0 +1,186 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+    <head>
+
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+
+      <title>Squirrel - Linked Data Crawler</title>
+
+      <!-- Bootstrap core CSS -->
+      <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+      <!-- Custom styles for this template -->
+      <link href="../css/shop-item.css" rel="stylesheet" />
+
+      <link rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+
+    <link href="../css/prism.css" rel="stylesheet" />
+
+
+    </head>
+
+
+    <body>
+
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Squirrel - Linked Data Crawler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+  			<!--
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+  			-->
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-3">
+
+
+   <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" >
+
+            <div class="list-group">
+              <a href="../index.html" class="list-group-item">Introduction</a>
+  			<a href="#" class="list-group-item active" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a>
+  				<div class="collapse in show" id="collapseDocumentation" style="background:white;">
+
+  					  <ul>
+  						  <li><a href="../javadocs.html" class="">Java Docs</a></li>
+  						  <li><a href="../overview.html" class="">Overview</a></li>
+						  <li><a href="../metadata.html" class="">Meta data</a></li>
+  						  <li><a href="../worker_components.html" class="">Worker Components</a></li>
+  					 </ul>
+
+  				</div>
+
+              <a href="../download.html" class="list-group-item">Downloads & Usage</a>
+              <a href="https://github.com/dice-group/Squirrel/releases" target="_blank" class="list-group-item">Release Notes</a>
+
+            </div>
+  						<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="../img/dummy-preview-image.png" class="my-4" ></a>
+
+
+          </div>
+          <!-- /.col-lg-3 -->
+
+          <div class="col-lg-9">
+
+
+            <div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>HtmlScraperAnalzyer</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+
+
+
+	<p>Html Scrapping in Squirrel is available on the <b>HtmlScraperAnalyzer</b>.
+
+	As an analyzer, the scraper will use yaml files for each one of the websites that will be scraped, containing all syntax to found elements in the page. It is necessary to declare the env variable HTML_SCRAPER_YAML_PATH, pointing to the folder where the yaml files are stored. If the variable is not present, the HtmlScraperAnalyzer will not be executed.</p>
+
+	<p>An example of yaml scraping file for crawling the data portal <a href="https://mcloud.de/">mcloud.de</a> is described as it follows:</p>
+
+		<pre><code class="language-yaml">
+file_descriptor:
+ check:
+  domain: mcloud.de
+  ignore-request: false
+ search-result-page:
+  regex:
+   - results/searchAction
+   - results/search
+  resources:
+   "$uri": 
+    "http://squirrel.dice/link": .search-filtered .border-left a
+    "http://squirrel.dice/pagination": .pagination a
+ download_page:
+  regex: results/detail
+  resources:
+   "$uri":
+    "http://squirrel.dice/file": .matadata-table a
+
+	      </code></pre>
+
+	<p>The file must have the <b>file_descriptor</b> key, as well the check value, containing the domain of the portal that will be scraped. If this structure is not followed, an exception will be throw. The analyzer will check a map of loaded domains, checking all the files found by the variable <b> HTML_SCRAPER_YAML_PATH</b>.</p>
+<p>For each one of the pages that will be scraped, should be included two values: regex and resources. If the file does not follow this hierarchy, an exception will be throw. These values are described as follows:
+<ul>
+<li><b>regex</b>: the substring of the page's context that could match the URI</li>
+
+<li><b>resources</b>: a list of resources, predicates and the respective objects. For querying elements, the scraper uses the CSS selector from <a href="https://jsoup.org/">Jsoup</a>. It uses a jquery-like selector syntax to select html components instead of Xpath, but it is very simply to use. For syntax reference, please look at <a href="https://jsoup.org/apidocs/org/jsoup/select/Selector.html">https://jsoup.org/apidocs/org/jsoup/select/Selector.html</a>. The query should be defined as the object. You can use some variables to define the name of your resources. $uri will use the current page's url. $label will use the last context of the url.</li>
+</ul>
+</p>
+<p>
+In the example given, the Analzyer will get every link in the query result page, and all the pagenation link as well. Observe that the regex for the search-result-page contains <b>results/searchAction</b> and <b>results/search</b>. Using
+the following url as seed: <a href="https://mcloud.de/web/guest/suche/-/results/searchAction">https://mcloud.de/web/guest/suche/-/results/searchAction</a>, we will get all the result datasets, which will match the page descripted on the file, because the regex contains on the url. With each result link scraped, they will be sent to the Frontier and will match the download page, scraping the RDF file available on each dataset page.
+</p>
+
+
+
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+
+
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col-lg-9 -->
+
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+      <!-- Footer -->
+      <footer class="py-5 bg-dark">
+        <div class="container">
+          <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+        </div>
+        <!-- /.container -->
+      </footer>
+
+      <!-- Bootstrap core JavaScript -->
+      <script src="../vendor/jquery/jquery.min.js"></script>
+      <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="../js/prism.js"></script>
+
+     <script>
+      particlesJS.load('particles-js', 'assets/particles.json', function () {
+        console.log('callback - particles.js config loaded');
+      });
+    </script>
+
+    </body>
+
+  </html>

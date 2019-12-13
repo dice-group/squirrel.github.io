@@ -1,0 +1,179 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+    <head>
+
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+
+      <title>Squirrel - Linked Data Crawler</title>
+
+      <!-- Bootstrap core CSS -->
+      <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+      <!-- Custom styles for this template -->
+      <link href="../css/shop-item.css" rel="stylesheet" />
+
+      <link rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+
+    <link href="../css/prism.css" rel="stylesheet" />
+
+
+    </head>
+
+
+    <body>
+
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Squirrel - Linked Data Crawler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+  			<!--
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+  			-->
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-3">
+
+
+   <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" >
+
+            <div class="list-group">
+              <a href="../index.html" class="list-group-item">Introduction</a>
+  			<a href="#" class="list-group-item active" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a>
+  				<div class="collapse in show" id="collapseDocumentation" style="background:white;">
+
+  					  <ul>
+  						  <li><a href="../javadocs.html" class="">Java Docs</a></li>
+  						  <li><a href="../overview.html" class="">Overview</a></li>
+						  <li><a href="../metadata.html" class="">Meta data</a></li>
+  						  <li><a href="../worker_components.html" class="">Worker Components</a></li>
+  					 </ul>
+
+  				</div>
+
+              <a href="../download.html" class="list-group-item">Downloads & Usage</a>
+              <a href="https://github.com/dice-group/Squirrel/releases" target="_blank" class="list-group-item">Release Notes</a>
+
+            </div>
+  						<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="../img/dummy-preview-image.png" class="my-4" ></a>
+
+
+          </div>
+          <!-- /.col-lg-3 -->
+
+          <div class="col-lg-9">
+
+
+            <div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>Collectors and Serializers</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+
+	<p>An URI collector stores the serialized URIs that have been found by a analyzer while crawling/processing a certain URI. After the crawling, the URI collector will be asked for these URIs using the getUris(CrawleableUri) method, to send the found URIs to the frontier.
+		The collector requires a Serializer. Squirrel offers 3 self explained serializers:</p>
+	<ul>
+		<li><b>org.dice_research.squirrel.data.uri.serialize.java.SnappyJavaUriSerializer</b></li>
+		<li><b>org.dice_research.squirrel.data.uri.serialize.java.GzipJavaUriSerializer</b></li>
+		<li><b>org.dice_research.squirrel.data.uri.serialize.gson.GsonUriSerializer</b></li>
+	</ul>
+
+
+		<p>There are two possible implementations for Collectors, with all of then receiving a Serializer bean on constructor:</p>
+
+		<ul>
+		<li>
+		<b>SimpleUriCollector</b>: Stores the found URIs on memory. This collector should be used only for test purposes or for small graphs. Create the bean with:
+
+		<pre><code class="language-xml">
+			&lt;bean id="uriCollectorBean" 
+			class="org.dice_research.squirrel.collect.SimpleUriCollector" &gt;
+			 &lt;constructor-arg index="0" ref="serializerBean" /&gt; 
+			&lt;/bean&gt;</li>
+		 </code></pre>
+
+
+		<li><b>SqlBasedUriCollector</b>: Stores the found URIs on a local HSQLDB. While this collector is insignificantly slower than the SimpleUriCollector, it can store much more URIs, since they are serialized on disk. Create the bean with:
+		<pre><code class="language-xml">
+
+		&lt;bean id="uriCollectorBean"
+				class="org.dice_research.squirrel.collect.SqlBasedUriCollector"&gt;
+				&lt;constructor-arg index="0" ref="serializerBean" /&gt;
+				&lt;constructor-arg index="1" value="foundUris" /&gt;
+		&lt;/bean&gt;
+		 </code></pre>
+
+		The second parameter on the constructor refers to the HSQLDB database filename.</li>
+	<ul>
+
+
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+
+
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col-lg-9 -->
+
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+      <!-- Footer -->
+      <footer class="py-5 bg-dark">
+        <div class="container">
+          <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+        </div>
+        <!-- /.container -->
+      </footer>
+
+      <!-- Bootstrap core JavaScript -->
+      <script src="../vendor/jquery/jquery.min.js"></script>
+      <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="../js/prism.js"></script>
+
+     <script>
+      particlesJS.load('particles-js', 'assets/particles.json', function () {
+        console.log('callback - particles.js config loaded');
+      });
+    </script>
+
+    </body>
+
+  </html>

@@ -93,7 +93,7 @@
 
             <div class="card card-outline-secondary my-4">
               <div class="card-header">
-                <h5>Analyzers, Serializers and Collectors</h5>
+                <h5>Analyzers</h5>
               </div>
               <div class="card-body">
   				<div class="container">
@@ -122,43 +122,29 @@
 
       </code></pre>
 
-	<p>All the analyzers must extend the abstract class <b>org.dice_research.squirrel.analyzer.impl.AbstractAnalyzer</b> and override the anayze method. The constructor of the analyzer receives a class of type <b>org.dice_research.squirrel.collect.UriCollector.</b></p>
+	<p>All the analyzers must extend the abstract class <b>org.dice_research.squirrel.analyzer.impl.AbstractAnalyzer</b> and override the anayze method. The constructor of the analyzer receives a class of type                            
 
-	<p>An URI collector stores the serialized URIs that have been found by a analyzer while crawling/processing a certain URI. After the crawling, the URI collector will be asked for these URIs using the getUris(CrawleableUri) method, to send the found URIs to the frontier.
-		The collector requires a Serializer. Squirrel offers 3 self explained serializers:</p>
-	<ul>
-		<li><b>org.dice_research.squirrel.data.uri.serialize.java.SnappyJavaUriSerializer</b></li>
-		<li><b>org.dice_research.squirrel.data.uri.serialize.java.GzipJavaUriSerializer</b></li>
-		<li><b>org.dice_research.squirrel.data.uri.serialize.gson.GsonUriSerializer</b></li>
-	</ul>
+    <b>org.dice_research.squirrel.collect.UriCollector.</b> All the analyzers should implement the <b>analyze</b> and <b>isElegible</b> methods. The isElegible method, will check if that analyzer implementation is capable of dealing with the fetched data and if it is will call the analyze method. The analyze method, will receive the URI that is being crawled, the fetched file and the sink sik implementation chosen</p>
 
-
-		<p>There are two possible implementations for Collectors, with all of then receiving a Serializer bean on constructor:</p>
-
-		<ul>
-		<li>
-		<b>SimpleUriCollector</b>: Stores the found URIs on memory. This collector should be used only for test purposes or for small graphs. Create the bean with:
-
-		<pre><code class="language-xml">
-			&lt;bean id="uriCollectorBean" 
-			class="org.dice_research.squirrel.collect.SimpleUriCollector" &gt;
-			 &lt;constructor-arg index="0" ref="serializerBean" /&gt; 
-			&lt;/bean&gt;</li>
-		 </code></pre>
-
-
-		<li><b>SqlBasedUriCollector</b>: Stores the found URIs on a local HSQLDB. While this collector is insignificantly slower than the SimpleUriCollector, it can store much more URIs, since they are serialized on disk. Create the bean with:
-		<pre><code class="language-xml">
-
-		&lt;bean id="uriCollectorBean"
-				class="org.dice_research.squirrel.collect.SqlBasedUriCollector"&gt;
-				&lt;constructor-arg index="0" ref="serializerBean" /&gt;
-				&lt;constructor-arg index="1" value="foundUris" /&gt;
-		&lt;/bean&gt;
-		 </code></pre>
-
-		The second parameter on the constructor refers to the HSQLDB database filename.</li>
-	<ul>
+    <p>
+        Currently, the following analyzers are available:
+        <ul>
+            <li> Analyzer for RDF files. The following serializations are supported by this analyzer:
+                <ul>
+                    <li>RDF/XML</li>
+                    <li>N-Triples, N3, NQ and N-Quads</li>
+                    <li> Turtle</li>
+                    <li>TTL</li>
+                    <li>TRIG and TRIX</li>
+                    <li>JsonLD</li>
+                </ul>
+            </li>
+            <li>RDFa Analyzer for HTML and XHTML Documents.</li>
+            <li>HTML Scraper. An Analyzer for scrapping HTML pages. It uses the <a href="https://jsoup.org/">Jsoup</a> framework for scrapping and can be configured by the usage of yaml files to define how it should scrape a certain domain and its contexts or pages. For instructions about how to use and configure the HTML Scraper, click <a href="scraper.html">here</a>.</li>
+            <li>The <b>CKAN Analyzer</b> is used for the JSON lines files which are loaded from the CKAN API. It transforms the information about datasets in the CKAN portal into RDF triples using the DCAT ontology. </li>
+            <li>Any23-based analyzer that handles <b>Microdata</b> and <b>Microformat</b>.</li>
+        </ul>
+    </p>
 
 
   						</div>
