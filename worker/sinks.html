@@ -1,0 +1,193 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+    <head>
+
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+
+      <title>Squirrel - Linked Data Crawler</title>
+
+      <!-- Bootstrap core CSS -->
+      <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+      <!-- Custom styles for this template -->
+      <link href="../css/shop-item.css" rel="stylesheet" />
+
+      <link rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+
+    <link href="../css/prism.css" rel="stylesheet" />
+
+
+    </head>
+
+
+    <body>
+
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Squirrel - Linked Data Crawler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+  			<!--
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+  			-->
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-3">
+
+
+   <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" >
+
+            <div class="list-group">
+              <a href="../index.html" class="list-group-item">Introduction</a>
+  			<a href="#" class="list-group-item active" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a>
+  				<div class="collapse in show" id="collapseDocumentation" style="background:white;">
+
+  					  <ul>
+  						  <li><a href="../javadocs.html" class="">Java Docs</a></li>
+  						  <li><a href="../overview.html" class="">Overview</a></li>
+						  <li><a href="../metadata.html" class="">Meta data</a></li>
+  						  <li><a href="../worker_components.html" class="">Worker Components</a></li>
+  					 </ul>
+
+  				</div>
+
+              <a href="../download.html" class="list-group-item">Downloads & Usage</a>
+              <a href="https://github.com/dice-group/Squirrel/releases" target="_blank" class="list-group-item">Release Notes</a>
+
+            </div>
+  						<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="../img/dummy-preview-image.png" class="my-4" ></a>
+
+
+          </div>
+          <!-- /.col-lg-3 -->
+
+          <div class="col-lg-9">
+
+
+            <div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>Sinks</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+
+<p>The Sink has the task to persist extracted triples. Any implementation, must implement the <b>interface org.dice_research.squirrel.sink.Sink.</b> At the moment, three sinks  are  implemented: </p>
+                     
+  <ul>
+    <li><b>FileSink:</b> stores  the  triples  locally  in  files.  This file-based sink supports several RDF serializations and compresses the createdfiles. Below, we have a example of usage
+      on the spring-context file. The implementation requires as arguments a File object, that will point the folder where data will be persisted and a boolean falue, indicating if the file will be
+      compressed or not.
+    
+    <pre><code class="language-xml">
+    &lt;bean id="outputFolderBean" class="java.io.File"&gt;
+      &lt;constructor-arg index="0"
+        value="#{systemEnvironment['OUTPUT_FOLDER']}" /&gt;
+	  &lt;/bean&gt;
+
+    &lt;bean id="sinkBean"
+      class="org.dice_research.squirrel.sink.impl.file.FileBasedSink"/&gt;
+      &lt;constructor-arg name="outputDirectory"
+        ref="outputFolderBean" /&gt;
+      &lt;constructor-arg name="useCompression" value="false" /&gt;
+    &lt;/bean/&gt;
+    </code></pre></li><br>
+    
+    <li><b>HDT Sink:</b> stores the data on HDTcompressed format. For more information about HDT, please check <a href="http://www.rdfhdt.org/what-is-hdt/">here</a>. Just like the FileSink, the HDT Sink requires
+      a File object as argument.
+    
+    <pre><code class="language-xml">
+    &lt;bean id="outputFolderBean" class="java.io.File"&gt;
+    &lt;constructor-arg index="0"
+    value="#{systemEnvironment['OUTPUT_FOLDER']}" /&gt;
+	  &lt;/bean&gt;
+
+    &lt;bean id="sinkBean"
+    class="org.dice_research.squirrel.sink.impl.hdt.HdtBasedSink"&gt; 
+		&lt;constructor-arg name="outputDirectory" ref="outputFolderBean" /&gt; &lt;/bean&gt;
+    </code></pre></li><br>
+    
+    <li><b>SPARQL Sink:</b> uses SPARQL queries to insert the new triples into a triple store. This implementation requires 5 passed to the constructor: the Sparql endpoint URL and the user and password for the endpoint. The 4th argument refers
+      to the interval (in ms) between each attempt, if the storage fails for some reason (temporary connectivity problem or any other unavailability) and the last argument indicates the number of attempts that the sink will perform.
+    
+    <pre><code class="language-xml">
+     &lt;bean id="sinkBean" class="org.dice_research.squirrel.sink.impl.sparql.SparqlBasedSink" factory-method="create"&gt; 
+      &lt;constructor-arg index="0" value="#{systemEnvironment['SPARQL_URL']}" /&gt;
+      &lt;constructor-arg index="1" value="#{systemEnvironment['SPARQL_HOST_USER']}" /&gt;
+      &lt;constructor-arg index="2" value="#{systemEnvironment['SPARQL_HOST_PASSWD']}" /&gt;
+      &lt;constructor-arg index="3" value="1000" /&gt;
+      &lt;constructor-arg index="4" value="10" /&gt;
+     &lt;/bean&gt; 
+    </code></pre></li><br>
+    
+  </ul>
+
+
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+
+
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col-lg-9 -->
+
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+      <!-- Footer -->
+      <footer class="py-5 bg-dark">
+        <div class="container">
+          <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+        </div>
+        <!-- /.container -->
+      </footer>
+
+      <!-- Bootstrap core JavaScript -->
+      <script src="../vendor/jquery/jquery.min.js"></script>
+      <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="../js/prism.js"></script>
+
+     <script>
+      particlesJS.load('particles-js', 'assets/particles.json', function () {
+        console.log('callback - particles.js config loaded');
+      });
+    </script>
+
+    </body>
+
+  </html>
