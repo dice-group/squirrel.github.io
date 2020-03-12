@@ -96,7 +96,7 @@
 
             <div class="card card-outline-secondary my-4">
               <div class="card-header">
-                <h5>Implementing a new Fetcher</h5>
+                <h5>Implementing a new Analyzer</h5>
               </div>
               <div class="card-body">
   				<div class="container">
@@ -105,121 +105,123 @@
 
 
 
-<p>To create a new Fetcher, it is necessary to implement the interface <b>Fetcher</b>:</p>
+<p>To create a new Analyzer, it is necessary to extends the class <b>AbstractAnalyzer</b>. Following the <a href="https://dice-group.github.io/squirrel.github.io/tutorials/fetcher.html">Fetcher implementation example</a>,
+  let's implement ananlyzer for JSON content:</p>
 
 
-       <pre><code class="language-java">
-	   
-	   package org.dice_research.squirrel.fetcher;
-
-	   public interface Fetcher extends Closeable {
-	   		
-			public default File fetch(CrawleableUri uri) throws RuntimeException {
-				return fetch(uri, DummyDelayer.get());
-			}
-	   
-	   		public File fetch(CrawleableUri uri, Delayer delayer);
-	   }
-
-      </code></pre>
-								 
-								 <p>It is necessary to implement the <b>fetch</b> method and <b>close</b>, inherited from the <b>Closeable</b> interface</p>
-								 
-								  <p>The fetch method receives a <a href="https://github.com/dice-group/Squirrel/blob/master/squirrel.api/src/main/java/org/dice_research/squirrel/data/uri/CrawleableUri.java"> CrawleableUri</a> object,
-									  which represents a URI and additional meta data that is helpful for crawling it. The URI can be accessed through the <b>getUri()</b> method. The method must return a file object, which is the file that was
-									  fetched. After the fetcher is used, the close method will be called to close any open stream or finalize any other process. 
-								 </p>
-								 
-								 <p>Let's use as an example, a fetcher to fetch JSON Data:</p>
-								 
-								 <pre><code class="language-java">
-package org.dice_research.squirrel.fetcher.example;
-
-import java.io.BufferedReader;
+       <pre><code class="language-java">     
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.Charset;
+import java.util.Iterator;
 
-import org.apache.commons.io.FileUtils;
+import org.dice_research.squirrel.analyzer.AbstractAnalyzer;
+import org.dice_research.squirrel.collect.UriCollector;
 import org.dice_research.squirrel.data.uri.CrawleableUri;
-import org.dice_research.squirrel.fetcher.Fetcher;
-import org.dice_research.squirrel.fetcher.delay.Delayer;
-import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.dice_research.squirrel.sink.Sink;
 
-public class JsonFetcher implements Fetcher {
+public class JsonAnalyzer extends AbstractAnalyzer {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(JsonFetcher.class);
-
-	private InputStream is = null;
-
-	@Override
-	public void close() throws IOException {
-		is.close();
+	public JsonAnalyzer(UriCollector collector) {
+		super(collector);
 	}
 
 	@Override
-	public File fetch(CrawleableUri uri, Delayer delayer) {
-		try {
-			delayer.getRequestPermission();
-			is = uri.getUri().toURL().openStream();
-			BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
-			String jsonText = readAll(rd);
-			JSONObject json = new JSONObject(jsonText);
-			File file = File.createTempFile("fetched_", "", FileUtils.getTempDirectory());
-			FileWriter fw = new FileWriter(file);
-			fw.write(json.toString());
-			fw.close();
-			uri.addData("type", "json");
-			return file;
-		} catch (Exception e) {
-			LOGGER.error("Could not fetch Json from URI: " + uri.getUri().toString(), e);
-		}
+	public Iterator<byte[]> analyze(CrawleableUri curi, File data, Sink sink) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
-	private String readAll(Reader rd) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		int cp;
-		while ((cp = rd.read()) != -1) {
-			sb.append((char) cp);
-		}
-		return sb.toString();
+	@Override
+	public boolean isElegible(CrawleableUri curi, File data) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
-									  </code></pre>
+      </code></pre>
 								 
-								
-                     <p>The fetcher is initialized by invoking the <b>getRequestPermission()</b>, which will create a delay before the call, respecting the <b>robots.txt</b> directives.
-                     Then, will access the URI as an URL and parse the call result as a JSONObject. If the parse fails, an exception will be throw and null content will be returned. If
-                     the parse success, a temporary file will be created and the String representation of the JSONObject written into it. In the end, will be added metadata information that will be used
-                     on the Analyzer step.</p>
-                     
-                     <p>To include the Fetcher on runtime execution, create a bean of the implementaion and include the bean reference on the FetcherManager construct list on the <b>worker-context.xml</b></p>
-                     
-                     <pre><code class="language-xml">
-                     
-     &lt;bean id="jsonFetcherBean"
-		class="org.dice_research.squirrel.fetcher.example.JsonFetcher" /&gt;                
+								 <p>All implementations must define an explicit constructor from the super class, which will receive an UriCollector as argument. A URI collector stores the URIs that have been found by a worker while crawling/processing
+                 a certain URI. After the crawling, the URI collector will be asked for these URIs using the <b>getUris(CrawleableUri)</b> method, sending the URIs to the Frontier.</p>
+								 
+                 <p>The <b>isElegible</b> method receives the CrawleableUri and fetched file. The objective of this method is to check if the analyzer can in fact analyze the content, returning a boolean value.</p>
+                 
+                 <p>If the analyzer is elegible, it will call the <b>analyze</b> method. It receives the CrawleableUri, the fetched file and the sink where the extracted triples will be stored.</p>
+                 
+                 <p>Let's take a look on an analyzer implementation to extract triples from JSON fetched data:</p>
+                 
+                        <pre><code class="language-java">
+package org.dice_research.squirrel.analyzer.example;    
 
-	   &lt;bean id="fetcherBean"
-		class="org.dice_research.squirrel.fetcher.manage.SimpleOrderedFetcherManager"&gt;
+import java.io.File;
+import java.util.Iterator;
+
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.system.StreamRDF;
+import org.dice_research.squirrel.analyzer.AbstractAnalyzer;
+import org.dice_research.squirrel.analyzer.commons.FilterSinkRDF;
+import org.dice_research.squirrel.collect.UriCollector;
+import org.dice_research.squirrel.data.uri.CrawleableUri;
+import org.dice_research.squirrel.sink.Sink;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class JsonAnalyzer extends AbstractAnalyzer {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JsonAnalyzer.class);
+
+	public JsonAnalyzer(UriCollector collector) {
+		super(collector);
+	}
+
+	@Override
+	public Iterator<byte[]> analyze(CrawleableUri curi, File data, Sink sink) {
+		try {
+      //initializes the StreamRDF using our FilterSinkRDF implementation
+			StreamRDF filtered = new FilterSinkRDF(curi, sink, collector);
+      //try to parse the file as JSONLD
+			RDFDataMgr.parse(filtered, data.getAbsolutePath(), Lang.JSONLD);
+			return collector.getUris(curi);
+		} catch (Exception e) {
+			LOGGER.error("Exception while analyzing. Aborting. ", e);
+			return null;
+		}
+	}
+
+	@Override
+	public boolean isElegible(CrawleableUri curi, File data) {
+    //if the fetched uri is json, then the analyzer is elegible
+		if (curi.getData("type").equals("json")) {
+			return true;
+		}
+		return false;
+	}
+
+}
+      </code></pre>
+      
+      <p>The analyzer checks if the CrawledUri has the type information. If contains the "json" value, it is elegible.</p>
+      <p> Starting the analyze method, it should perform the necessary steps to extract triples from the focused content. In the end, the collector should be invoked calling the method <b>getUris(CrawleableUri)</b>.
+      This will return the serialized triples that were collected, and will be sent to the frontier.</p> 
+      <p>Just like the fetcher, the analyzer requires to be referenced on the <b>worker-context.xml</b> as well: </p>
+      
+                           <pre><code class="language-xml">
+                     
+     &lt;bean id="jsonAnalyzerBean" class="org.dice_research.squirrel.analyzer.example.JsonAnalyzer" &gt;
+        &lt;constructor-arg index="0" ref="uriCollectorBean" /&gt;
+     &lt;bean/&gt;
+
+	   &lt;bean id="analyzerBean" class="org.dice_research.squirrel.analyzer.manager.SimpleAnalyzerManager"&gt;
 		&lt;constructor-arg&gt;
 			&lt;list&gt;
-      	&lt;ref bean="jsonFetcherBean" /&gt;
-				&lt;ref bean="httpFetcherBean" /&gt;
- 		  	&lt;/list&gt;
+            &lt;ref bean="jsonAnalyzerBean" /&gt;
+            &lt;ref bean="rdfAnalyzerBean" /&gt;
+ 		  &lt;/list&gt;
 		&lt;/constructor-arg&gt;
 	&lt;/bean&gt;
 
       </code></pre>
 	
+  <p>Notice that the Bean needs to reference an UriCollector in the constructor. Check the <a href="https://dice-group.github.io/squirrel.github.io/worker/cs.html">Collector and Serializers</a> documentation for details.</p>
 
 
   						</div>
