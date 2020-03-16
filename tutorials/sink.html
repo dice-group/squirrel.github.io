@@ -1,0 +1,243 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+    <head>
+
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+
+      <title>Squirrel - Linked Data Crawler</title>
+
+      <!-- Bootstrap core CSS -->
+      <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+      <!-- Custom styles for this template -->
+      <link href="../css/shop-item.css" rel="stylesheet" />
+
+      <link rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+
+    <link href="../css/prism.css" rel="stylesheet" />
+
+
+    </head>
+
+
+    <body>
+
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Squirrel - Linked Data Crawler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+  			<!--
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+  			-->
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-3">
+
+
+   <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" >
+
+            <div class="list-group">
+              <a href="../index.html" class="list-group-item">Introduction</a>
+  			<a href="#" class="list-group-item" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a>
+  				<div class="collapse in show" id="collapseDocumentation" style="background:white;">
+
+  					  <ul>
+  						  <li><a href="../javadocs.html" class="">Java Docs</a></li>
+  						  <li><a href="../overview.html" class="">Overview</a></li>
+						  <li><a href="../metadata.html" class="">Meta data</a></li>
+  						  <li><a href="../worker_components.html" class="">Worker Components</a></li>
+  					 </ul>
+
+  				</div>
+				
+				<a  href="../tutorials.html" class="list-group-item active">Tutorials</a>
+
+
+              <a href="../download.html" class="list-group-item">Downloads & Usage</a>
+              <a href="https://github.com/dice-group/Squirrel/releases" target="_blank" class="list-group-item">Release Notes</a>
+
+            </div>
+  						<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="../img/dummy-preview-image.png" class="my-4" ></a>
+
+
+          </div>
+          <!-- /.col-lg-3 -->
+
+          <div class="col-lg-9">
+
+
+            <div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>Implementing a new Sink</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+
+
+
+<p>To create a new Sink, it is necessary to implement the interface <b>Sink</b>.
+
+
+       <pre><code class="language-java">     
+public interface Sink extends TripleBasedSink, QuadBasedSink, UnstructuredDataSink, Closeable {
+
+    public default void addMetaData(Model model) {
+        CrawleableUri uri = new CrawleableUri(Constants.DEFAULT_META_DATA_GRAPH_URI);
+        StmtIterator iterator = model.listStatements();
+        while (iterator.hasNext()) {
+            addTriple(uri, iterator.next().asTriple());
+        }
+        flushMetadata();
+    }
+
+    @Override
+    public default void close() throws IOException {
+        closeSinkForUri(new CrawleableUri(Constants.DEFAULT_META_DATA_GRAPH_URI));
+    }
+    
+    public void flushMetadata();
+    
+}
+      </code></pre>
+
+                     <p>Please notice that this interface extends others, such as: <b>TripleBasedSink</b>,<b>QuadBasedSink</b>, <b>UnstructuredDataSink</b>, <b>Closeable</b>, requiring the following methods to be implemented:</p>
+                     
+       <pre><code class="language-java">     
+public class CustomSink implements Sink{
+
+	@Override
+	public void addTriple(CrawleableUri uri, Triple triple) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void openSinkForUri(CrawleableUri uri) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void closeSinkForUri(CrawleableUri uri) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addQuad(CrawleableUri uri, Quad quad) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addData(CrawleableUri uri, InputStream stream) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void flushMetadata() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+    
+}
+      </code></pre>
+  
+  <p>Here it is the purpose of each one of the methods:</p>
+  
+  <p>
+    <ul>
+      <li><b>openSinkForUri</b>: The sink sould open a stream for the URI received. In General, the implementation can have a Map &lt;URI,stream&gt;, containing the URIs and their respective streams</li>
+       <li><b>addTriple</b>: Write triple data into URI's respective stream</li>
+       <li><b>addQuad</b>: Write quad data into URI's respective stream</li>
+       <li><b>addData</b>: Stores the data from the given stream for the given URI.</li>
+       <li><b>flushMetadata</b>: Flushes the current metadata information into the metadata graph.</li>
+       <li><b>closeSinkForUri</b>: Closes the stream for the given URI.</li>
+
+    </ul>
+    </p>
+  
+  <p>Good examples of implementations can be seen on the <b>org.dice_research.squirrel.sink.impl.file.FileBasedSink</b> and <b>org.dice_research.squirrel.sink.impl.sparql.SparqlBasedSink</b>. These sinks implmements
+  solutions for File system storare and Sparql Endpoints, respectivelly.</p>
+  
+  <p>Also, the sink is managed by the spring context. Do not forget to include your implementation in the <b>worker-context.xml</b></p>
+<pre><code class="language-xml">       
+  &lt;bean id="sinkBean"
+        class="org.dice_research.squirrel.sink.impl.custom.CustomSink" /&gt;
+</code></pre>
+  
+
+
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+
+
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col-lg-9 -->
+
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+      <!-- Footer -->
+      <footer class="py-5 bg-dark">
+        <div class="container">
+          <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+        </div>
+        <!-- /.container -->
+      </footer>
+
+      <!-- Bootstrap core JavaScript -->
+      <script src="../vendor/jquery/jquery.min.js"></script>
+      <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="../js/prism.js"></script>
+
+     <script>
+      particlesJS.load('particles-js', 'assets/particles.json', function () {
+        console.log('callback - particles.js config loaded');
+      });
+    </script>
+
+    </body>
+
+  </html>
