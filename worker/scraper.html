@@ -74,10 +74,11 @@
   						  <li><a href="../overview.html" class="">Overview</a></li>
 						  <li><a href="../metadata.html" class="">Meta data</a></li>
   						  <li><a href="../worker_components.html" class="">Worker Components</a></li>
+						  
   					 </ul>
 
   				</div>
-
+			  <a  href="../tutorials.html" class="list-group-item">Tutorials</a>
               <a href="../download.html" class="list-group-item">Downloads & Usage</a>
               <a href="https://github.com/dice-group/Squirrel/releases" target="_blank" class="list-group-item">Release Notes</a>
 
@@ -119,13 +120,13 @@ file_descriptor:
    - results/search
   resources:
    "$uri": 
-    "http://squirrel.dice/link": .search-filtered .border-left a
-    "http://squirrel.dice/pagination": .pagination a
+    "http://squirrel.dice_research/dataset#Link": .search-filtered .border-left a
+    "http://squirrel.dice_research/dataset#Page": .pagination a
  download_page:
   regex: results/detail
   resources:
    "$uri":
-    "http://squirrel.dice/file": .matadata-table a
+    "http://squirrel.dice_research/dataset#File": .matadata-table a
 
 	      </code></pre>
 
@@ -142,6 +143,24 @@ In the example given, the Analzyer will get every link in the query result page,
 the following url as seed: <a href="https://mcloud.de/web/guest/suche/-/results/searchAction">https://mcloud.de/web/guest/suche/-/results/searchAction</a>, we will get all the result datasets, which will match the page descripted on the file, because the regex contains on the url. With each result link scraped, they will be sent to the Frontier and will match the download page, scraping the RDF file available on each dataset page.
 </p>
 
+						<p>You can test your JSoup queries at <a href="https://try.jsoup.org/">try.jsoup.org.</a> Use <b>Fetch URL</b> to fetch the desired page and start testing. Let's take as an example the URL
+						: <a href = "https://mcloud.de/web/guest/suche/-/results/searchAction?_mcloudsearchportlet_query=&_mcloudsearchportlet_sort=latest">
+							https://mcloud.de/web/guest/suche/-/results/searchAction?_mcloudsearchportlet_query=&_mcloudsearchportlet_sort=latest </a>. The URL will be a match for the regex <b>results/searchAction</b>. </p>
+						
+						<p>Use your favorite browser inspector mode to analyze the html elements and css classes that contains the information that you want to scrap. Using tryjsoup, we can see
+							the results for our query (<b>.search-filtered .border-left a</b>) as shows the image below:</p>
+						
+						<img src="../tutorials/img/tryjsoup1.png" style="width: 100%" />
+						
+						<p>This will extract all the links from the result page. The Html Analyzer will detect automatically <b>&lt;a&gt;</b> link elements and extract the URL from it.</p>
+						<p>Also, we need to scrape the pagination links, so the crawler can visit each one of the pages: </p>
+						<img src="../tutorials/img/tryjsoup2.png" style="width: 100%" />
+						
+						<p>For the detail page, if the regex matches URL that contains <b>results/detail</b>, it will scrape the link for the RDF file, available on each dataset page.</p>
+						
+						<p>For this scraping task, it was used both the <b>HTMLScraperAnalyzer</b> and the <b>RDFAnalyzer</b>, to extract triples from the dataset's RDF File.</p>
+					
+						
 
 
   						</div>
