@@ -106,27 +106,13 @@
 
 							 <p>After the installation of the Docker Engine and Docker-Compose, go to the extracted folder and run:</p>
 
-							 <div class="well" style="background: #f2f2f2"><code class="bash">	mvn clean install -U -DskipTests -Dmaven.javadoc.skip=true</code></div>
+							 <div class="well" style="background: #f2f2f2"><code class="bash">	docker-compose up -d mongodb rabbit</code></div>
 
-							 <p>This will build the binaries. Now we create the Docker images for the frontier and the Worker with:</p>
-							 <div class="well" style="background: #f2f2f2"><code class="bash"> docker build -f Dockerfile.frontier -t squirrel.frontier .</code>
+							 <p>This will start the rabbitmq and mongodb images, for the communication between the frontier and workers and the frontier queue, respectively</p>
+							 <p>Set your seeds on the <b>seed/seeds.txt</b> file. Now you can run the frontier and one worker instance with:</p>
+							 <div class="well" style="background: #f2f2f2"><code class="bash"> docker-compose up frontier worker1</code>
 							 </div>
-
-							 <div class="well" style="background: #f2f2f2"><code class="bash">	docker build -f Dockerfile.worker -t squirrel.worker .</code></div>
-
-							 <p>Ok, we are almost there. Now you can insert some initial URIs in the file seeds/seeds.txt. After doing that, you can run with:</p>
-							<div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up</code></div>
-							<p>
-							 Wait some seconds for the initialization of MongoDB, RabbitMQ, Frontier and the Workers. By default, docker will use the docker-compose.yml file. We will cover in details all images described in this file in the next section.
-							If it is more convenient for you, you can start the images separatly, like:
-							 </p>
-							 <div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up -d mongodb rabbit</code></div>
-							<p>This will run these images in the background, since theirs outputs are very verbose. Next you can run the Frontier and worker in different terminals:
-							</p>
-							 <div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up frontier</code></div>
-
-							 <div class="well" style="background: #f2f2f2"><code class="bash">docker-compose up worker1</code></div>
-								<p>This will allows you to run a new worker in a new terminal window, making it easily to follow the outputs.</p>
+								
 
 
 
@@ -159,6 +145,10 @@
 								 related to the <b>FileBasedSink</b> and <b>HtmlScraperAnalyzer</b> and you can read more about then in the <a href="worker_components.html">Worker Components</a> section.
 									You can copy and paste many worker images as you want, and customize then with different implementations.
 							 </p>
+							 
+							 <p>Squirrel releases comes with two pre configured docker-compose files. The <b>docker-compose.yml</b> configured for file storage and <b>docker-compose-sparql.yml</b> for sparql endpoints, including
+								 virtuoso configured container.
+							 </p>
 
 						</div>
 					</div>
@@ -178,6 +168,7 @@
 
 							 <p>Squirrel uses <a href="http://spring.io/projects/spring-framework">Spring</a> for dependency injection, which alows the user to control the implementations that will be used in run iime.
 								 Under spring-config/* you can fine some pre configured context files. There, you can configure which implementations you want to use for fetcher, analyzer and sink for the worker instance.
+								 By default, Squirrel comes with the <b>worker-context.xml</b> configured with the File Sink and the <b>worker-context-sparql.xml</b> with the SparqlBasedSink configured, for use with the <b>docker-compose-sparql.yml</b>.
 								 To know more about the default implementations available and how to write your own, please visit the  <a href="worker_components.html">Worker Components</a> section. If you need reference about Spring metadata configuration,
 								 please check this <a href="https://docs.spring.io/spring/docs/3.0.x/spring-framework-reference/html/beans.html">link</a>.
 
