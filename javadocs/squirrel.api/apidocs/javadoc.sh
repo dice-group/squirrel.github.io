@@ -1,1 +1,0 @@
-/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.191.b12-11.fc29.x86_64/jre/../bin/javadoc @options @packages

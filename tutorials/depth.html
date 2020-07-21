@@ -1,0 +1,172 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+    <head>
+
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+
+      <title>Squirrel - Linked Data Crawler</title>
+
+      <!-- Bootstrap core CSS -->
+      <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+      <!-- Custom styles for this template -->
+      <link href="../css/shop-item.css" rel="stylesheet" />
+
+      <link rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+
+    <link href="../css/prism.css" rel="stylesheet" />
+
+
+    </head>
+
+
+    <body>
+
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Squirrel - Linked Data Crawler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+  			<!--
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+  			-->
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-3">
+
+
+   <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" >
+
+            <div class="list-group">
+              <a href="../index.html" class="list-group-item">Introduction</a>
+  			<a href="#" class="list-group-item" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a>
+  				<div class="collapse in show" id="collapseDocumentation" style="background:white;">
+
+  					  <ul>
+  						  <li><a href="../javadocs.html" class="">Java Docs</a></li>
+  						  <li><a href="../overview.html" class="">Overview</a></li>
+						  <li><a href="../metadata.html" class="">Meta data</a></li>
+  						  <li><a href="../worker_components.html" class="">Worker Components</a></li>
+  					 </ul>
+
+  				</div>
+				
+				<a  href="../tutorials.html" class="list-group-item active">Tutorials</a>
+
+
+              <a href="../download.html" class="list-group-item">Downloads & Usage</a>
+              <a href="https://github.com/dice-group/Squirrel/releases" target="_blank" class="list-group-item">Release Notes</a>
+
+            </div>
+  						<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="../img/dummy-preview-image.png" class="my-4" ></a>
+
+
+          </div>
+          <!-- /.col-lg-3 -->
+
+          <div class="col-lg-9">
+
+
+            <div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>Crawling with a depth limit</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+
+
+
+<p>It is possible to impose a limit to the crawling based on a depth limit. The
+	configuration is done by creating a bean of <a target="_blank" href ="../javadocs/squirrel.frontier/apidocs/org/dice_research/squirrel/data/uri/filter/DepthFilter.html">DepthFilter</a> type and passing the reference on the
+	UriFilterConfigurator bean, as described in the <a target="_blank" href = "multiple_filters.html" >Configuring Filters tutorial.</a></p>
+
+
+       <pre><code class="language-xml">
+	&lt;bean id="UriFilterBean"
+		class="org.dice_research.squirrel.data.uri.filter.UriFilterConfigurator"&gt;
+		&lt;constructor-arg index="0" ref="mongoDBKnowUriFilter" /&gt;
+		&lt;constructor-arg index="1"&gt;
+			&lt;list&gt;
+				  &lt;ref bean="depthFilter" /&gt;
+			&lt;/list&gt;
+		&lt;/constructor-arg&gt;
+		&lt;constructor-arg index="2" value="OR" /&gt;
+	&lt;/bean&gt;
+	   
+	&lt;bean id="depthFilter"
+		class="org.dice_research.squirrel.data.uri.filter.DepthFilter"&gt;
+		&lt;constructor-arg index="0" value="5" /&gt;
+	&lt;/bean&gt;
+      </code></pre>
+								 
+	  <p>The DepthFilter constructor receives only one constructor, which is the number that express the maximum depth. When the filter detects an URI highter than the specified, it will inform the Frontier to not crawl it.</p>				
+
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+
+
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col-lg-9 -->
+
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+      <!-- Footer -->
+      <footer class="py-5 bg-dark">
+        <div class="container">
+          <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+        </div>
+        <!-- /.container -->
+      </footer>
+
+      <!-- Bootstrap core JavaScript -->
+      <script src="../vendor/jquery/jquery.min.js"></script>
+      <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="../js/prism.js"></script>
+
+     <script>
+      particlesJS.load('particles-js', 'assets/particles.json', function () {
+        console.log('callback - particles.js config loaded');
+      });
+    </script>
+
+    </body>
+
+  </html>

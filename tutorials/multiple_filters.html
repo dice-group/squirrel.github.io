@@ -1,0 +1,247 @@
+  <!DOCTYPE html>
+  <html lang="en">
+
+    <head>
+
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+      <meta name="description" content="" />
+      <meta name="author" content="" />
+
+      <title>Squirrel - Linked Data Crawler</title>
+
+      <!-- Bootstrap core CSS -->
+      <link href="../vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+
+      <!-- Custom styles for this template -->
+      <link href="../css/shop-item.css" rel="stylesheet" />
+
+      <link rel="stylesheet"
+            href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/styles/default.min.css">
+
+    <link href="../css/prism.css" rel="stylesheet" />
+
+
+    </head>
+
+
+    <body>
+
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+        <div class="container">
+          <a class="navbar-brand" href="../index.html">Squirrel - Linked Data Crawler</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+  			<!--
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item active">
+                <a class="nav-link" href="#">Home
+                  <span class="sr-only">(current)</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+              </li>
+            </ul>
+  			-->
+          </div>
+        </div>
+      </nav>
+
+      <!-- Page Content -->
+      <div class="container">
+
+        <div class="row">
+
+          <div class="col-lg-3">
+
+
+   <img src="https://hobbitdata.informatik.uni-leipzig.de/squirrel/squirrel-logo.png" class="my-4"  height="248" width="244" >
+
+            <div class="list-group">
+              <a href="../index.html" class="list-group-item">Introduction</a>
+  			<a href="#" class="list-group-item" data-toggle="collapse" data-target="#collapseDocumentation" >Documentation</a>
+  				<div class="collapse in show" id="collapseDocumentation" style="background:white;">
+
+  					  <ul>
+  						  <li><a href="../javadocs.html" class="">Java Docs</a></li>
+  						  <li><a href="../overview.html" class="">Overview</a></li>
+						  <li><a href="../metadata.html" class="">Meta data</a></li>
+  						  <li><a href="../worker_components.html" class="">Worker Components</a></li>
+  					 </ul>
+
+  				</div>
+				
+				<a  href="../tutorials.html" class="list-group-item active">Tutorials</a>
+
+
+              <a href="../download.html" class="list-group-item">Downloads & Usage</a>
+              <a href="https://github.com/dice-group/Squirrel/releases" target="_blank" class="list-group-item">Release Notes</a>
+
+            </div>
+  						<a href="https://dice.cs.uni-paderborn.de/about/" title="Dice Group" target="_blank"> <img src="../img/dummy-preview-image.png" class="my-4" ></a>
+
+
+          </div>
+          <!-- /.col-lg-3 -->
+
+          <div class="col-lg-9">
+
+
+            <div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>Configuring Filters</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+
+
+
+<p>Filtering is an essential task on crawling, responsible for defining it which URI's should be crawled and which URI's should not.</p>
+								 
+								 <p>Squirrel allows the user to configure multiple filters on the frontier configuration through the use of the
+								 
+								 <a target="_blank" href ="../javadocs/squirrel.api/apidocs/org/dice_research/squirrel/data/uri/filter/UriFilterConfigurator.html">UriFilterConfigurator</a> class.
+									 This class is required the be instanced on the <b>frontier-context.xml</b> in order for the Frontier to work. Check the example below:</p>
+								 
+	
+       <pre><code class="language-xml">
+	&lt;bean id="UriFilterBean"
+		class="org.dice_research.squirrel.data.uri.filter.UriFilterConfigurator"&gt;
+		&lt;constructor-arg index="0" ref="mongoDBKnowUriFilter" /&gt;
+		&lt;constructor-arg index="1"&gt;
+			&lt;list&gt;
+				  &lt;ref !-- additional filters references  --&gt;
+			&lt;/list&gt;
+		&lt;/constructor-arg&gt;
+		&lt;constructor-arg index="2" value="OR" /&gt;
+	&lt;/bean&gt;
+	
+	
+	&lt;bean id="mongoDBKnowUriFilter"
+		class="org.dice_research.squirrel.data.uri.filter.MongoDBKnowUriFilter"&gt;
+		&lt;constructor-arg index="0"
+			value="#{systemEnvironment['MDB_HOST_NAME']}" /&gt;
+		&lt;constructor-arg index="1"
+			value="#{systemEnvironment['MDB_PORT']}" /&gt;
+
+	</bean>
+	   
+
+      </code></pre>
+	
+								 <p>The constructor receives three arguments:
+							<ul>
+								<li>A filter that implements the <a target="_blank" href ="../javadocs/squirrel.api/apidocs/org/dice_research/squirrel/data/uri/filter/KnownUriFilter.html">KnownUriFilter</a> interface. This implementation certifies that an URI which was crawled, should not be crawled again (except if the recrawling from time to time is enabled).
+								On the example above, it is used the default implementation:<a target="_blank" href ="../javadocs/squirrel.frontier/apidocs/org/dice_research/squirrel/data/uri/filter/MongoDBKnowUriFilter.html"> MongoDBKnowUriFilter</a>, which stores the already crawled URI's on MongoDB. </li>
+								<li>A list of other filter implementations that will be composed with the KnownUriFilter. Only references that implements the <a target="_blank" href ="../javadocs/squirrel.api/apidocs/org/dice_research/squirrel/data/uri/filter/UriFilter.html">UriFilter</a> interface are allowed. The list can be empty.</li>
+								<li>An operator that express the condition of filtering. Two options is available: "AND" - "OR". If "AND" is typped, All the filters must return true to stop the crawling. The "OR" options, will stop the crawling if at least one returns true.</li>
+							<ul>
+						</p>
+							
+
+
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+
+			  
+			  <div class="card card-outline-secondary my-4">
+              <div class="card-header">
+                <h5>Implementing a new Filter</h5>
+              </div>
+              <div class="card-body">
+  				<div class="container">
+  					<div class="row">
+         					 <div class="col-md-12">
+
+
+
+				<p>Filter implementations should implement the <a target="_blank" href ="../javadocs/squirrel.api/apidocs/org/dice_research/squirrel/data/uri/filter/UriFilter.html">UriFilter</a> interface.</p>
+								 
+								        <pre><code class="language-java">
+/**
+ * A simple filter that can decide whether a given {@link CrawleableUri} object
+ * imposes a certain requirement or not.
+ * 
+ * @author Michael R&ouml;der (roeder@informatik.uni-leipzig.de)
+ *
+ */
+public interface UriFilter {
+
+    /**
+     * Returns true if the given {@link CrawleableUri} object fulfills the
+     * requirements imposed by this filter.
+     * 
+     * @param uri
+     *            the {@link CrawleableUri} object that is checked
+     * @return true if the given {@link CrawleableUri} object fulfills the
+     *         requirements imposed by this filter. Otherwise false is returned.
+     */
+    public boolean isUriGood(CrawleableUri uri);
+    
+    
+    /**
+     * Adds the given URI to the list of already known URIs. Works like calling {@link #add(CrawleableUri, long)} with the current system time.
+     *
+     * @param uri the URI that should be added to the list.
+     * 
+     */    
+    public void add(CrawleableUri uri);
+
+	</bean>
+	   
+
+      </code></pre>
+
+  						</div>
+  					</div>
+  				  </div>
+  				<hr>
+              </div>
+            </div>
+
+
+            <!-- /.card -->
+
+          </div>
+          <!-- /.col-lg-9 -->
+
+        </div>
+
+      </div>
+      <!-- /.container -->
+
+      <!-- Footer -->
+      <footer class="py-5 bg-dark">
+        <div class="container">
+          <p class="m-0 text-center text-white">Squirrel - Linked Data Crawler &copy; 2019</p>
+        </div>
+        <!-- /.container -->
+      </footer>
+
+      <!-- Bootstrap core JavaScript -->
+      <script src="../vendor/jquery/jquery.min.js"></script>
+      <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+      <script src="../js/prism.js"></script>
+
+     <script>
+      particlesJS.load('particles-js', 'assets/particles.json', function () {
+        console.log('callback - particles.js config loaded');
+      });
+    </script>
+
+    </body>
+
+  </html>
