@@ -109,8 +109,7 @@
 
 	<p>An example of yaml scraping file for crawling the data portal <a href="https://mcloud.de/">mcloud.de</a> is described as it follows:</p>
 
-		<pre><code class="language-yaml">
-file_descriptor:
+<pre><code class="language-yaml">file_descriptor:
  check:
   domain: mcloud.de
   ignore-request: false
@@ -126,9 +125,7 @@ file_descriptor:
   regex: results/detail
   resources:
    "$uri":
-    "http://squirrel.dice_research/dataset#File": .matadata-table a
-
-	      </code></pre>
+    "http://squirrel.dice_research/dataset#File": .matadata-table a</code></pre>
 
 	<p>The file must have the <b>file_descriptor</b> key, as well the check value, containing the domain of the portal that will be scraped. If this structure is not followed, an exception will be throw. The analyzer will check a map of loaded domains, checking all the files found by the variable <b> HTML_SCRAPER_YAML_PATH</b>.</p>
 <p>For each one of the pages that will be scraped, should be included two values: regex and resources. If the file does not follow this hierarchy, an exception will be throw. These values are described as follows:
