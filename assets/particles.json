@@ -4,7 +4,7 @@
       "value": 69,
       "density": {
         "enable": true,
-        "value_area": 819.8939057285982
+        "value_area": 600
       }
     },
     "color": {
@@ -36,7 +36,7 @@
       }
     },
     "size": {
-      "value": 3,
+      "value": 2,
       "random": true,
       "anim": {
         "enable": false,
@@ -50,7 +50,7 @@
       "distance": 150,
       "color": "#cf8838",
       "opacity": 0.4,
-      "width": 1.9677453737486352
+      "width": 1
     },
     "move": {
       "enable": true,
@@ -68,7 +68,7 @@
     }
   },
   "interactivity": {
-    "detect_on": "window",
+    "detect_on": "canvas",
     "events": {
       "onhover": {
         "enable": true,
@@ -105,6 +105,4 @@
         "particles_nb": 2
       }
     }
-  },
-  "retina_detect": true
-}
+  }
